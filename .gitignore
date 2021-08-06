@@ -1,6 +1,6 @@
 
 
-# Logs (Symfony4)
+# Logs (Symfony5)
 /var/log/*
 !var/log/.gitkeep
 
