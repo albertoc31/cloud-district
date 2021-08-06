@@ -4,6 +4,9 @@
 /var/log/*
 !var/log/.gitkeep
 
+# Cache (Symfony5)
+/var/cache/*
+
 # Parameters
 /app/config/parameters.yml
 /app/config/parameters.ini
