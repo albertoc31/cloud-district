@@ -32,7 +32,7 @@ class ValidateQueryPaginatedProductsTest extends KernelTestCase
         $validateQueryPaginatedProduct = $container->get(ValidateQueryPaginatedProducts::class);
         $errors = $validateQueryPaginatedProduct($query['filter'], $query['page'], $query['limit'], $query['order_by'], $query['order_dir']);
 
-        $this->assertCount(5, $errors);
+        $this->assertCount(7, $errors);
     }
 
     private function getQuery($isOK)

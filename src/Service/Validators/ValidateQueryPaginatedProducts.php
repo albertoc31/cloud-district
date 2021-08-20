@@ -30,11 +30,11 @@ class ValidateQueryPaginatedProducts
         $constraint = new Assert\Collection([
             'filter' => new Assert\Type(['type' => 'string']),
             'page' => [
-                // new Assert\Type('integer'),
+                new Assert\Type('integer'),
                 new Assert\Positive(),
             ],
             'limit' => [
-                // new Assert\Type('integer'),
+                new Assert\Type('integer'),
                 new Assert\Positive(),
             ],
             'order_by' => new Assert\Choice(['id', 'name', 'price']),
