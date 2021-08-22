@@ -19,6 +19,9 @@ class GeneratePaginatedEntityList
 
     public function __invoke($paginatedEntityList, $page, $limit): array
     {
+        /** Evitamos la división por 0 */
+        if ($limit < 1) { $limit = 1;}
+
         $maxPages = ceil(count($paginatedEntityList) / $limit);
 
         $records = [];
