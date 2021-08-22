@@ -45,29 +45,8 @@ class GeneratePaginatedEntityListTest extends KernelTestCase
         $property->setAccessible(true);
         $property->setValue($productA, 666); */
 
-        /*$tax1 = $this->createMock(Tax::class);
-        $tax1->expects($this->any())
-            ->method('__toString')
-            ->willReturn('tax 1 (10%)');
-        $tax2 = $this->createMock(Tax::class);
-        $tax2->expects($this->any())
-            ->method('__toString')
-            ->willReturn('tax 2 (20%)');*/
 
         $productA = $this->createMock(Product::class);
-
-        /*$productA->expects($this->any())
-            ->method('getID')
-            ->willReturn(1);
-        $productA->expects($this->any())
-            ->method('getName')
-            ->willReturn('product 1');
-        $productA->expects($this->any())
-            ->method('getPrice')
-            ->willReturn(10.00);
-        $productA->expects($this->any())
-            ->method('getTax')
-            ->willReturn($tax1);*/
         $productA->expects($this->any())
             ->method('toArray')
             ->willReturn([
@@ -79,19 +58,6 @@ class GeneratePaginatedEntityListTest extends KernelTestCase
                 ]);
 
         $productB = $this->createMock(Product::class);
-        /*$productB->expects($this->any())
-            ->method('getID')
-            ->willReturn(2);
-        $productB->expects($this->any())
-            ->method('getName')
-            ->willReturn('product 2');
-        $productB->expects($this->any())
-            ->method('getPrice')
-            ->willReturn(20.00);
-        $productB->expects($this->any())
-            ->method('getTax')
-            ->willReturn($tax2);*/
-
         $productB->expects($this->any())
             ->method('toArray')
             ->willReturn([
@@ -101,7 +67,6 @@ class GeneratePaginatedEntityListTest extends KernelTestCase
                 'price' => '20.00',
                 'tax' => 'tax 2 (20%)'
             ]);
-
 
         return $paginatedEntity = [
             0 => $productA,
