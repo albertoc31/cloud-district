@@ -3,9 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\Tax;
+use App\Service\Validators\ValidateDataNewProduct;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,9 +19,14 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $manager;
+    private $validateDataNewProduct;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $manager, ValidateDataNewProduct $validateDataNewProduct )
     {
-        parent::__construct($registry, Product::class);
+        parent::__construct($registry, Product::class );
+        $this->manager = $manager;
+        $this->validateDataNewProduct = $validateDataNewProduct;
     }
 
     public function paginate($dql, $page, $limit)
@@ -32,7 +41,7 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * Creamos el metodo para devolver todos los productos paginados
+     * Metodo para devolver todos los productos paginados
      *
      * @param int $currentPage
      * @param int $limit
@@ -54,5 +63,52 @@ class ProductRepository extends ServiceEntityRepository
         $paginatedProducts = $this->paginate($query, $currentPage, $limit);
 
         return $paginatedProducts;
+    }
+
+    /**
+     * Metodo para agregar producto nuevo
+     *
+     * @param $data
+     * @return Product|bool
+     */
+    public function saveProduct($data)
+    {
+        $taxRepository = $this->manager->getRepository('App\Entity\Tax');
+        $taxList = $taxRepository->findAll();
+
+        /* Validamos la query */
+        $errors = $this->validateDataNewProduct->__invoke($data, $taxList);
+        if (0 !== count($errors)) {
+            $errorMessages = [];
+            /** @var ConstraintViolation $error */
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getPropertyPath() . ": " . $error->getMessage();
+            }
+            return $errorMessages;
+        }
+
+        /** @var Tax $tax */
+        $tax = $taxRepository->find($data['tax']);
+
+        if (! $tax instanceof Tax) {
+         return false;
+        }
+
+        /** Podemos hacer directamente este calculo porque traemos los datos sanitizados */
+        $priceWithTax = $data['price'] * ($tax->getPercent()/100 + 1);
+
+        $newProduct = new Product();
+
+        $newProduct
+            ->setName($data['name'])
+            ->setDescription($data['description'])
+            ->setPrice($data['price'])
+            ->setTax($tax)
+            ->setPriceWithTax($priceWithTax);
+
+        $this->manager->persist($newProduct);
+        // $this->manager->flush();
+
+        return $newProduct;
     }
 }

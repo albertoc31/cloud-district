@@ -122,7 +122,7 @@ class Product
             'description' => $this->description,
             'price' => $this->price,
             'tax' => $this->getTax()->__toString(),
-            'priceWithTax' => $this->price_with_tax,
+            'price_with_tax' => $this->price_with_tax,
         ];
     }
 }
