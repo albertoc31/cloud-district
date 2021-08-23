@@ -16,3 +16,9 @@ Prueba técnica para cloud district
    bin/console --env=test doctrine:fixtures:load
    
    Y finalmente lanzar los tests con el comando bin/phpunit
+   
+**Notas:**
+1) Hay alguna incompatibilidad entre la versión de Symfony 5.3 y PHP 7.4 por el uso de psr/container[1.1.1].
+https://stackoverflow.com/questions/67172779/error-while-installing-symfony-declaration-dependencyinjection-psr-php-what-t
+
+   El despliegue en un contenedor Docker ha sido satisfactorio con PHP 8
