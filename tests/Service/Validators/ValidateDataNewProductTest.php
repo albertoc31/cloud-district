@@ -35,7 +35,7 @@ class ValidateDataNewProductTest extends KernelTestCase
         $validateDataNewProduct = $container->get(ValidateDataNewProduct::class);
         $errors = $validateDataNewProduct($testData['data'], $testData['taxChoices']);
 
-        $this->assertCount(4, $errors);
+        $this->assertCount(5, $errors);
     }
 
     public function getTestData ($isOK)

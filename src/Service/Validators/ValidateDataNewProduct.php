@@ -35,6 +35,7 @@ class ValidateDataNewProduct
                 new Assert\Type(['type' => 'string']),
             ],
             'price' => [
+                new Assert\Type(['type' => 'integer']),
                 new Assert\NotBlank(),
                 new Assert\Positive(),
             ],
