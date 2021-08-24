@@ -1,0 +1,28 @@
+security:
+  password_hashers:
+    App\Entity\User:
+      algorithm: auto
+
+  providers:
+    # used to reload user from session & other features (e.g. switch_user)
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: apiToken
+
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    main:
+      anonymous: true
+      lazy: true
+      provider: app_user_provider
+      guard:
+        authenticators:
+          - App\Security\ApiTokenAuthenticator
+      stateless: true
+
+  access_control:
+    - { path: ^/API/v1/product/new, roles: ROLE_USER }
+    #- { path: ^/api/v1/product/list, roles: ROLE_USER }
