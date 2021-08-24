@@ -36,7 +36,7 @@ class ApiProductControllerTest extends WebTestCase
         $newProduct = [];
         $newProduct['name'] = 'product test';
         $newProduct['description'] = 'product test description';
-        $newProduct['price'] = '10';
+        $newProduct['price'] = 10;
         $newProduct['tax'] = 1;
 
         $client->request('POST', '/API/v1/product/new', [], [], [
