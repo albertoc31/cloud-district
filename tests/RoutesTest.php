@@ -3,6 +3,7 @@
 namespace App\Tests\Service;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Repository\UserRepository;
 
 class RoutesTest extends WebTestCase
 {
@@ -15,11 +16,33 @@ class RoutesTest extends WebTestCase
          *  Aquí estamos usando el servidor interno de symfony
          */
         $client = self::createClient([], [
-            'HTTP_HOST' => '127.0.0.1:8000',
+            //'HTTP_HOST' => '127.0.0.1:8000',
+            //'HTTP_AUTHORIZATION' => 'Bearer admintoken'
         ]);
+
         $client->request($method, $url);
 
         $this->assertEquals($status, $client->getResponse()->getStatusCode());
+    }
+
+    public function testAuthorizationOK()
+    {
+        $client = self::createClient([], [
+            'HTTP_AUTHORIZATION' => 'Bearer admintoken'
+        ]);
+
+        $client->request('POST', '/API/v1/product/new');
+        $this->assertEquals(422, $client->getResponse()->getStatusCode());
+    }
+
+    public function testAuthorizationKO()
+    {
+        $client = self::createClient([], [
+            'HTTP_AUTHORIZATION' => 'Bearer notAdmintoken'
+        ]);
+
+        $client->request('POST', '/API/v1/product/new');
+        $this->assertEquals(401, $client->getResponse()->getStatusCode());
     }
 
     public function provideUrlsMethods()
@@ -28,7 +51,7 @@ class RoutesTest extends WebTestCase
             ['GET','/API/v1/tax/list', 200],
             ['GET','/API/v1/product/list', 200],
             // ['GET','/API/v1/product/new', 405],
-            ['POST','/API/v1/product/new', 422],
+            ['POST','/API/v1/product/new', 401],
         ];
     }
 }
